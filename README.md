@@ -4,7 +4,8 @@ Press Any Key to Abort – cmd timeout, pause, sleep, choice alternative
 CMD batch alternative to commands like timeout. 
 If there is a need to abort/close/stop operation by pressing any key pakta will do it.
 
-Usage
+Usage:
+
 Press any key to INTERRUPT (not continue) batch task while timeout goes.
 If no key is pressed during timeout, batch will continue normally.
 
