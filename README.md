@@ -16,3 +16,5 @@ Errorlevels:
 -2 general error
 
 pakta.exe -T timeout ms (-I key to continue) (-X KILL PARENT PROCESS instead of generating errorlevel)
+
+Special thanks to https://stackoverflow.com/a/18342182
