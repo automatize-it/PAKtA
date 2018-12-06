@@ -61,9 +61,7 @@ namespace PAKtA
             catch (TimeoutException)
             {
 
-                if (!xt) { return (0); } //cntThread.Abort(); 
-                else { pp.Kill(); } //parent.Kill(); 
-                
+                return (1);     
             }
 
             cntThread.Abort();
