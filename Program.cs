@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace PAKtA
 {
     class Program
     {
+        public static int revcnt = 0;
+        public static DateTime strttm;
+
         static int Main(string[] args)
         {
 
@@ -48,9 +52,15 @@ namespace PAKtA
 
             }
 
+
+            revcnt = timeout;
+            
+            
             Thread cntThread;
-            cntThread = new Thread(() => revcount(timeout)); 
+            cntThread = new Thread(() => revcount(timeout));
+            strttm = DateTime.Now;
             cntThread.Start();
+            
 
             try
             {
@@ -96,9 +106,37 @@ namespace PAKtA
             Console.WriteLine(@"{0} -T timeout ms (-I key to continue) (-X KILL PARENT PROCESS instead of generating errorlevel)", assemblyName);
         }
 
+        
         private static void revcount(int tmot)
         {
+
+            System.Timers.Timer aTimer = new System.Timers.Timer(10);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+
+        }         
+
+            /*
+            int i = 0;
+
+            var autoEvent = new AutoResetEvent(false);
+
+            var statusChecker = new StatusChecker(1,tmot);
+
+            var stateTimer = new System.Threading.Timer(statusChecker.CheckStatus, autoEvent, 0, 10);
+             */
+
+            //while (true) ;
+            // When autoEvent signals, change the period to every half second.
+
+            //while (true) { autoEvent.WaitOne(); }
             
+            
+            //stateTimer.Change(0, 500);
+            
+            /*
             for (int i = 0; i < tmot; ++i )
             {
                 Thread.Sleep(1);
@@ -106,6 +144,56 @@ namespace PAKtA
                 Console.Write("\r{0} ", ((tmot-i)/1000).ToString());
                 Console.ResetColor();
                 Console.Write(((tmot - i) % 1000).ToString());
+            }
+             */
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            
+            //revcnt -= 15;
+            TimeSpan tmp = DateTime.Now - strttm;
+            double i = double.Parse(tmp.TotalMilliseconds.ToString());
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("\r{0} ", (((revcnt - (int)i) / 1000).ToString()));
+            Console.ResetColor();
+            Console.Write(((revcnt - (int)i) % 1000).ToString());
+        }
+
+
+        class StatusChecker
+        {
+            private int invokeCount;
+            private int maxCount;
+            private int i = 0;
+            private int localtmot = 0;
+
+            public StatusChecker(int count,int tmot)
+            {
+                invokeCount = 0;
+                maxCount = count;
+                localtmot = tmot;
+                
+            }
+
+            // This method is called by the timer delegate.
+            public void CheckStatus(Object stateInfo)
+            {
+                                
+                AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("\r{0} ", ((localtmot - (i += 10)) / 1000).ToString());
+                Console.ResetColor();
+                Console.Write(((localtmot - i) % 1000).ToString());
+                //invokeCount++;
+
+                /*
+                if (invokeCount == maxCount)
+                {
+                    // Reset the counter and signal the waiting thread.
+                    invokeCount = 0;
+                    autoEvent.Set();
+                }
+                 */
             }
         }
 
