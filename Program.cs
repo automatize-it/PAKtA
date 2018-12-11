@@ -15,6 +15,7 @@ namespace PAKtA
     {
         public static int timeout = 0;
         public static DateTime strttm;
+        public static System.Timers.Timer aTimer = new System.Timers.Timer(10);
 
         static int Main(string[] args)
         {
@@ -103,7 +104,6 @@ namespace PAKtA
         private static void revcount()
         {
 
-            System.Timers.Timer aTimer = new System.Timers.Timer(10);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
@@ -116,18 +116,21 @@ namespace PAKtA
         {
             
             TimeSpan tmp = DateTime.Now - strttm;
-            double i = double.Parse(tmp.TotalMilliseconds.ToString());
-            if (timeout - (int)i < 50)
+            int i = (int)tmp.TotalMilliseconds;
+            if (timeout - (int)i < 10)
             {
 
+                Console.Write("\r{0} ", "        "); 
                 Console.Write("\r{0} ", "0");
+                Console.WriteLine();
+                aTimer.Enabled = false;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("\r{0} ", (((timeout - (int)i) / 1000).ToString()));
+                Console.Write("\r{0} ", (((timeout - i) / 1000).ToString()));
                 Console.ResetColor();
-                Console.Write(((timeout - (int)i) % 1000).ToString());
+                Console.Write(((timeout - i) % 1000).ToString());
             }
             
         }
